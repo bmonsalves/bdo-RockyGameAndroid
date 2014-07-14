@@ -1,10 +1,12 @@
 package cl.backapp.killemcat.app;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.media.MediaPlayer;
 
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -26,6 +28,8 @@ public class Sprite {
     private int width;
     private int height;
 
+
+
     public Sprite(GameView gameView, Bitmap bmp) {
         this.gameView = gameView;
         this.bmp = bmp;
@@ -46,6 +50,7 @@ public class Sprite {
     }
 
     private void update() {
+
         if (x > gameView.getWidth() - width - xSpeed || x + xSpeed < 0) {
             xSpeed = -xSpeed;
         }
@@ -55,11 +60,15 @@ public class Sprite {
         }
         y = y + ySpeed;
         if (y > gameView.getHeight() - height - ySpeed){
+            gameView.removeRocky();
             if ((x <= (gameView.getWidth()/2)+width && x >= (gameView.getWidth()/2)-width*2 )){
+                gameView.removeRocky();
                 gameView.removeFood();
+                gameView.removeRocky2();
                 gameView.dog();
             }
         }
+
         currentFrame = ++currentFrame % BMP_COLUMNS;
     }
 
@@ -72,6 +81,7 @@ public class Sprite {
         //destino
         Rect dst = new Rect(x, y, x + width, y + height);
         canvas.drawBitmap(bmp, src, dst, null);
+
     }
 
 

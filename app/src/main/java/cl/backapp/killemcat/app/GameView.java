@@ -22,6 +22,7 @@ public class GameView extends SurfaceView implements MediaPlayer.OnCompletionLis
     private List<MediaPlayer> sounds = new ArrayList<MediaPlayer>();
     private List<MediaPlayer> soundsDog = new ArrayList<MediaPlayer>();
     private List<Dish> dish = new ArrayList<Dish>();
+    private List<Rocky> rocky = new ArrayList<Rocky>();
     private List<TempSprite> temps = new ArrayList<TempSprite>();
     private Bitmap bmp;
     private SurfaceHolder holder;
@@ -30,6 +31,7 @@ public class GameView extends SurfaceView implements MediaPlayer.OnCompletionLis
     private MediaPlayer mp;
     private int soundCat;
     private int soundDog;
+
 
 
 
@@ -50,6 +52,7 @@ public class GameView extends SurfaceView implements MediaPlayer.OnCompletionLis
                 //arranca el loop
                 createDish();
                 createSprites();
+                createRocky();
                 gameLoopThread.setRunning(true);
                 gameLoopThread.start();
             }
@@ -60,7 +63,6 @@ public class GameView extends SurfaceView implements MediaPlayer.OnCompletionLis
             }
         });
         bmpBlood = BitmapFactory.decodeResource(getResources(), R.drawable.blood1);
-
 
     }
 
@@ -139,6 +141,10 @@ public class GameView extends SurfaceView implements MediaPlayer.OnCompletionLis
         dish.add(createDish(R.drawable.plato6));
     }
 
+    private void createRocky(){
+        rocky.add(createRocky(R.drawable.rocky_1));
+    }
+
     private Sprite createSprite(int resouce) {
         Bitmap bmp = BitmapFactory.decodeResource(getResources(), resouce);
         return new Sprite(this,bmp);
@@ -147,6 +153,11 @@ public class GameView extends SurfaceView implements MediaPlayer.OnCompletionLis
     private Dish createDish(int resouce) {
         Bitmap bmp = BitmapFactory.decodeResource(getResources(), resouce);
         return new Dish(this,bmp);
+    }
+
+    private Rocky createRocky(int resouce) {
+        Bitmap bmp = BitmapFactory.decodeResource(getResources(), resouce);
+        return new Rocky(this,bmp);
     }
 
     @Override
@@ -161,6 +172,9 @@ public class GameView extends SurfaceView implements MediaPlayer.OnCompletionLis
         for (Dish dish1 : dish) {
             dish1.onDraw(canvas);
         }
+        for (Rocky rocky1: rocky) {
+            rocky1.onDraw(canvas);
+        }
     }
 
     @Override
@@ -172,5 +186,14 @@ public class GameView extends SurfaceView implements MediaPlayer.OnCompletionLis
         if (dish.size()>1){
             dish.remove(0);
         }
+    }
+    public void removeRocky(){
+        rocky.remove(0);
+        rocky.add(createRocky(R.drawable.rocky_2));
+    }
+    public void removeRocky2(){
+        rocky.remove(0);
+        rocky.add(createRocky(R.drawable.rocky_1));
+
     }
 }
