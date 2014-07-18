@@ -33,8 +33,6 @@ public class GameView extends SurfaceView implements MediaPlayer.OnCompletionLis
     private int soundDog;
 
 
-
-
     public GameView(Context context){
         super(context);
         gameLoopThread = new GameLoopThread(this);
@@ -79,6 +77,7 @@ public class GameView extends SurfaceView implements MediaPlayer.OnCompletionLis
                         mew();
                         sprites.remove(sprite);
                         temps.add(new TempSprite(temps, this, x, y, bmpBlood));
+                        randomSprites();
                         break;
                     }
                 }
@@ -114,21 +113,30 @@ public class GameView extends SurfaceView implements MediaPlayer.OnCompletionLis
 
     private void createSprites() {
         sprites.add(createSprite(R.drawable.black_cat));
-        sprites.add(createSprite(R.drawable.bw_cat));
-
-        sprites.add(createSprite(R.drawable.coffe_cat));
-        sprites.add(createSprite(R.drawable.whelmet_cat));
-        sprites.add(createSprite(R.drawable.white_cat));
-        sprites.add(createSprite(R.drawable.yellow_cat));
-        sprites.add(createSprite(R.drawable.yhelmet_cat));
-        sprites.add(createSprite(R.drawable.black_cat));
+        /*
         sprites.add(createSprite(R.drawable.bw_cat));
         sprites.add(createSprite(R.drawable.coffe_cat));
         sprites.add(createSprite(R.drawable.whelmet_cat));
         sprites.add(createSprite(R.drawable.white_cat));
         sprites.add(createSprite(R.drawable.yellow_cat));
         sprites.add(createSprite(R.drawable.yhelmet_cat));
+        */
+    }
 
+    private void randomSprites(){
+        Sprite[] cats = {createSprite(R.drawable.yhelmet_cat),
+                createSprite(R.drawable.bw_cat),
+                createSprite(R.drawable.coffe_cat),
+                createSprite(R.drawable.whelmet_cat),
+                createSprite(R.drawable.white_cat),
+                createSprite(R.drawable.yellow_cat),
+                createSprite(R.drawable.yhelmet_cat)
+        };
+        Random rn = new Random();
+        int cantCat = rn.nextInt(6);
+        for (int i = 0; i<=cantCat;i++){
+            sprites.add(cats[i]);
+        }
     }
 
     private void createDish(){
@@ -179,7 +187,7 @@ public class GameView extends SurfaceView implements MediaPlayer.OnCompletionLis
 
     @Override
     public void onCompletion(MediaPlayer mediaPlayer) {
-        mp.stop();
+        //mp.stop();
     }
 
     public void removeFood(){
