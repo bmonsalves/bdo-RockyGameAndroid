@@ -1,6 +1,7 @@
 package cl.backapp.killemcat.app;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -9,6 +10,7 @@ import android.media.MediaPlayer;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -31,10 +33,15 @@ public class GameView extends SurfaceView implements MediaPlayer.OnCompletionLis
     private MediaPlayer mp;
     private int soundCat;
     private int soundDog;
+    boolean stop;
+    private MainActivity context;
+    private Context mContext;
+    private int contador = 0;
 
 
     public GameView(Context context){
         super(context);
+        this.mContext = context;
         gameLoopThread = new GameLoopThread(this);
         sound();
         soundDog();
@@ -43,6 +50,7 @@ public class GameView extends SurfaceView implements MediaPlayer.OnCompletionLis
 
             @Override
             public void surfaceDestroyed(SurfaceHolder holder) {
+                gameLoopThread.setRunning(false);
             }
 
             @Override
@@ -51,8 +59,19 @@ public class GameView extends SurfaceView implements MediaPlayer.OnCompletionLis
                 createDish();
                 createSprites();
                 createRocky();
-                gameLoopThread.setRunning(true);
-                gameLoopThread.start();
+                //gameLoopThread.setRunning(true);
+                //gameLoopThread.start();
+
+                MainActivity obj=new MainActivity();
+                stop=obj.getBoolean(); //receive status of boolean from main activity
+
+                //stop is boolean set if backPressed in main activity
+                if(!stop){
+                    gameLoopThread.setRunning(true);
+                    gameLoopThread.start();
+                }
+                else
+                    gameLoopThread.setRunning(false);
             }
 
             @Override
@@ -78,6 +97,7 @@ public class GameView extends SurfaceView implements MediaPlayer.OnCompletionLis
                         sprites.remove(sprite);
                         temps.add(new TempSprite(temps, this, x, y, bmpBlood));
                         randomSprites();
+                        contador = contador + 1;
                         break;
                     }
                 }
@@ -168,8 +188,10 @@ public class GameView extends SurfaceView implements MediaPlayer.OnCompletionLis
         return new Rocky(this,bmp);
     }
 
+
+
     @Override
-    protected void onDraw(Canvas canvas) {
+    public void draw(Canvas canvas) {
         canvas.drawColor(Color.BLACK);
         for (int i = temps.size() - 1; i >= 0; i--) {
             temps.get(i).onDraw(canvas);
@@ -193,8 +215,15 @@ public class GameView extends SurfaceView implements MediaPlayer.OnCompletionLis
     public void removeFood(){
         if (dish.size()>1){
             dish.remove(0);
+        }else {
+            gameLoopThread.setRunning(false);
+            Intent intent = new Intent(mContext, FinishActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.putExtra("contador",String.valueOf(contador));
+            mContext.startActivity(intent);
         }
     }
+
     public void removeRocky(){
         rocky.remove(0);
         rocky.add(createRocky(R.drawable.rocky_2));
@@ -204,4 +233,5 @@ public class GameView extends SurfaceView implements MediaPlayer.OnCompletionLis
         rocky.add(createRocky(R.drawable.rocky_1));
 
     }
+
 }
